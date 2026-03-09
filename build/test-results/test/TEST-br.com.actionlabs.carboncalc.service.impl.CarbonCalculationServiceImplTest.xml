@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="br.com.actionlabs.carboncalc.service.impl.CarbonCalculationServiceImplTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-03-09T20:53:51" hostname="MATHEUSLUIZ" time="0.735">
+  <properties/>
+  <testcase name="getResult_shouldCalculateCarbonEmissionsCorrectly()" classname="br.com.actionlabs.carboncalc.service.impl.CarbonCalculationServiceImplTest" time="0.669"/>
+  <testcase name="updateCalcInfo_withUnknownId_shouldThrowCalculationNotFoundException()" classname="br.com.actionlabs.carboncalc.service.impl.CarbonCalculationServiceImplTest" time="0.008"/>
+  <testcase name="getResult_withUnknownId_shouldThrowCalculationNotFoundException()" classname="br.com.actionlabs.carboncalc.service.impl.CarbonCalculationServiceImplTest" time="0.005"/>
+  <testcase name="startCalculation_shouldPersistUserDataAndReturnGeneratedId()" classname="br.com.actionlabs.carboncalc.service.impl.CarbonCalculationServiceImplTest" time="0.02"/>
+  <testcase name="updateCalcInfo_shouldOverwriteAllFieldsAndReturnSuccess()" classname="br.com.actionlabs.carboncalc.service.impl.CarbonCalculationServiceImplTest" time="0.024"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

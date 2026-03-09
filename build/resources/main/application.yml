@@ -1,0 +1,20 @@
+# PROJECT
+server:
+  version: "0.1.0"
+
+  # SERVER
+  port: 8085
+  compression:
+    enabled: true
+    mime-types: "application/json,text/json,application/xml,text/html,text/xml,text/plain,application/javascript,text/css"
+
+spring:
+  application:
+    name: al-carbon-calculator
+  profiles:
+    active: "development"
+  data:
+    mongodb:
+      uri: "mongodb://localhost:27017/carbon-calc"
+      auto-index-creation: true
+
