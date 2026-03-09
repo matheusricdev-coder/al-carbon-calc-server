@@ -6,6 +6,7 @@ import br.com.actionlabs.carboncalc.dto.StartCalcResponseDTO;
 import br.com.actionlabs.carboncalc.dto.UpdateCalcInfoRequestDTO;
 import br.com.actionlabs.carboncalc.dto.UpdateCalcInfoResponseDTO;
 import br.com.actionlabs.carboncalc.exception.CalculationNotFoundException;
+import br.com.actionlabs.carboncalc.exception.EmissionFactorNotFoundException;
 import br.com.actionlabs.carboncalc.model.CarbonCalculation;
 import br.com.actionlabs.carboncalc.model.SolidWasteEmissionFactor;
 import br.com.actionlabs.carboncalc.model.Transportation;
@@ -53,14 +54,16 @@ public class CarbonCalculationServiceImpl implements CarbonCalculationService {
     calculation.setSolidWasteTotal(request.getSolidWasteTotal());
     calculation.setRecyclePercentage(request.getRecyclePercentage());
 
-    List<Transportation> transportationList = request.getTransportation().stream()
-        .map(dto -> {
-          Transportation t = new Transportation();
-          t.setType(dto.getType());
-          t.setMonthlyDistance(dto.getMonthlyDistance());
-          return t;
-        })
-        .collect(Collectors.toList());
+    List<Transportation> transportationList = request.getTransportation() == null
+        ? List.of()
+        : request.getTransportation().stream()
+            .map(dto -> {
+              Transportation t = new Transportation();
+              t.setType(dto.getType());
+              t.setMonthlyDistance(dto.getMonthlyDistance());
+              return t;
+            })
+            .collect(Collectors.toList());
     calculation.setTransportation(transportationList);
 
     calculationRepository.save(calculation);
@@ -91,7 +94,7 @@ public class CarbonCalculationServiceImpl implements CarbonCalculationService {
     if (calculation.getEnergyConsumption() == null) return 0.0;
     return energyEmissionFactorRepository.findById(calculation.getUf())
         .map(factor -> calculation.getEnergyConsumption() * factor.getFactor())
-        .orElse(0.0);
+        .orElseThrow(() -> new EmissionFactorNotFoundException(calculation.getUf()));
   }
 
   private double calculateTransportationEmission(CarbonCalculation calculation) {
@@ -99,7 +102,7 @@ public class CarbonCalculationServiceImpl implements CarbonCalculationService {
     return calculation.getTransportation().stream()
         .mapToDouble(t -> transportationEmissionFactorRepository.findById(t.getType())
             .map(factor -> t.getMonthlyDistance() * factor.getFactor())
-            .orElse(0.0))
+            .orElseThrow(() -> new EmissionFactorNotFoundException(t.getType().name())))
         .sum();
   }
 
@@ -107,8 +110,7 @@ public class CarbonCalculationServiceImpl implements CarbonCalculationService {
     if (calculation.getSolidWasteTotal() == null || calculation.getRecyclePercentage() == null) return 0.0;
 
     SolidWasteEmissionFactor factor = solidWasteEmissionFactorRepository.findById(calculation.getUf())
-        .orElse(null);
-    if (factor == null) return 0.0;
+        .orElseThrow(() -> new EmissionFactorNotFoundException(calculation.getUf()));
 
     double recyclableEmission = calculation.getSolidWasteTotal()
         * calculation.getRecyclePercentage()

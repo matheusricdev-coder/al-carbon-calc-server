@@ -21,6 +21,13 @@ public class GlobalExceptionHandler {
         .body(Map.of("message", ex.getMessage()));
   }
 
+  @ExceptionHandler(EmissionFactorNotFoundException.class)
+  public ResponseEntity<Map<String, String>> handleEmissionFactorNotFound(EmissionFactorNotFoundException ex) {
+    log.error("Emission factor not found: {}", ex.getMessage());
+    return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
+        .body(Map.of("message", ex.getMessage()));
+  }
+
   @ExceptionHandler(MethodArgumentNotValidException.class)
   public ResponseEntity<Map<String, Object>> handleValidationErrors(MethodArgumentNotValidException ex) {
     Map<String, String> errors = new HashMap<>();
