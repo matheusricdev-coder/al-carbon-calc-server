@@ -35,7 +35,7 @@ public class CarbonCalculationServiceImpl implements CarbonCalculationService {
     CarbonCalculation calculation = new CarbonCalculation();
     calculation.setName(request.getName());
     calculation.setEmail(request.getEmail());
-    calculation.setUf(request.getUf());
+    calculation.setUf(request.getUf().toUpperCase());
     calculation.setPhoneNumber(request.getPhoneNumber());
 
     CarbonCalculation saved = calculationRepository.save(calculation);
@@ -54,16 +54,14 @@ public class CarbonCalculationServiceImpl implements CarbonCalculationService {
     calculation.setSolidWasteTotal(request.getSolidWasteTotal());
     calculation.setRecyclePercentage(request.getRecyclePercentage());
 
-    List<Transportation> transportationList = request.getTransportation() == null
-        ? List.of()
-        : request.getTransportation().stream()
-            .map(dto -> {
-              Transportation t = new Transportation();
-              t.setType(dto.getType());
-              t.setMonthlyDistance(dto.getMonthlyDistance());
-              return t;
-            })
-            .collect(Collectors.toList());
+    List<Transportation> transportationList = request.getTransportation().stream()
+        .map(dto -> {
+          Transportation t = new Transportation();
+          t.setType(dto.getType());
+          t.setMonthlyDistance(dto.getMonthlyDistance());
+          return t;
+        })
+        .collect(Collectors.toList());
     calculation.setTransportation(transportationList);
 
     calculationRepository.save(calculation);

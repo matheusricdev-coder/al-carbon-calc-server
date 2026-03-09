@@ -14,14 +14,17 @@ import java.util.List;
 public class UpdateCalcInfoRequestDTO {
   @NotBlank
   private String id;
+  @NotNull
   @PositiveOrZero
-  private int energyConsumption;
+  private Integer energyConsumption;
   @NotNull
   @Valid
   private List<TransportationDTO> transportation;
+  @NotNull
   @PositiveOrZero
-  private int solidWasteTotal;
+  private Integer solidWasteTotal;
+  @NotNull
   @DecimalMin("0.0")
   @DecimalMax("1.0")
-  private double recyclePercentage;
+  private Double recyclePercentage;
 }

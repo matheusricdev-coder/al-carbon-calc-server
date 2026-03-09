@@ -5,6 +5,7 @@ import br.com.actionlabs.carboncalc.dto.StartCalcResponseDTO;
 import br.com.actionlabs.carboncalc.exception.CalculationNotFoundException;
 import br.com.actionlabs.carboncalc.service.CarbonCalculationService;
 import br.com.actionlabs.carboncalc.dto.UpdateCalcInfoResponseDTO;
+import br.com.actionlabs.carboncalc.exception.EmissionFactorNotFoundException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,6 +71,38 @@ class OpenRestControllerTest {
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.errors.uf").exists())
         .andExpect(jsonPath("$.errors.phoneNumber").exists());
+  }
+
+  @Test
+  void startCalculation_withInvalidEmail_shouldReturn400() throws Exception {
+    Map<String, String> body = Map.of(
+        "name", "João",
+        "email", "not-an-email",
+        "uf", "SP",
+        "phoneNumber", "11999999999"
+    );
+
+    mockMvc.perform(post("/open/start-calc")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(body)))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.errors.email").exists());
+  }
+
+  @Test
+  void startCalculation_withInvalidUf_shouldReturn400() throws Exception {
+    Map<String, String> body = Map.of(
+        "name", "João",
+        "email", "joao@email.com",
+        "uf", "INVALID",
+        "phoneNumber", "11999999999"
+    );
+
+    mockMvc.perform(post("/open/start-calc")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(body)))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.errors.uf").exists());
   }
 
   // --- PUT /open/info ---
@@ -174,6 +207,16 @@ class OpenRestControllerTest {
 
     mockMvc.perform(get("/open/result/unknown"))
         .andExpect(status().isNotFound())
+        .andExpect(jsonPath("$.message").exists());
+  }
+
+  @Test
+  void getResult_withMissingEmissionFactor_shouldReturn422() throws Exception {
+    when(carbonCalculationService.getResult(eq("abc123")))
+        .thenThrow(new EmissionFactorNotFoundException("XX"));
+
+    mockMvc.perform(get("/open/result/abc123"))
+        .andExpect(status().isUnprocessableEntity())
         .andExpect(jsonPath("$.message").exists());
   }
 }
