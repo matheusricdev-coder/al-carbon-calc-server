@@ -90,21 +90,3 @@ organize the code as you see fit.
 
 There are a few implemented classes to check the application's health, security and swagger configs and so on. There's
 probably no need to modify them, but if you think it's necessary, go ahead.
-
-## Additional libs
-
-You are free to add any dependencies you see fit to the project. We want you to implement this challenge the same way
-you deal in any other project: use your best judgment.
-
-## Test evaluation
-
-Your test will be evaluated both on the correctness of the implementation and the quality of the code.
-
-There is no need to host your code anywhere. Publish your code in a public repository and share it with us, so we can
-download
-and run it.
-
-Forks are disabled in this repository, so you should download the code and create a new repository with your
-implementation.
-
-Good luck! :smile:
