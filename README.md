@@ -55,38 +55,5 @@ The class `SolidWasteEmissionFactor` contains the emission factors for recyclabl
 emission follows the formula:
 
 ```Carbon emission = solid waste production * emission factor```
-
-## Technical Notes
-
-### Database
-
-Run `docker compose up` to start the MongoDB database. The database will be populated with the default collection
-contents defined in the `init-mongo.js` script when first started - all default emission factors are here. These values
-are only for this test and should not be
-considered real values for carbon emissions :smile:
-
-If you need to reset the database to its initial state, you can run `docker compose down -v`, which will erase the
-database and repopulate the initial values in the next start.
-
-### Running the application
-
-You can use your IDE of choice to run the application. The main class is `CarbonCalculatorApplication`. The server will
-run
-on port 8085 (http://localhost:8085).
-
-There is a swagger documentation available on http://localhost:8085/swagger-ui.html.
-
-### Classes already created
-
-We created the classes for the RestController and the DTOs needed to execute its endpoints. If you want to change them,
-please keep the same property names - don't break the defined interface.
-
-We also created 3 basic models and their corresponding Repository interfaces for the carbon emission values that you
-need to use in your implementations. These are the objects pre-populated in the
-database. Feel free to add more methods to the *Repository interfaces as needed.
-
-You will certainly need to create new classes to implement the logic for the endpoints and new models. Feel free to
-organize the code as you see fit.
-
 There are a few implemented classes to check the application's health, security and swagger configs and so on. There's
 probably no need to modify them, but if you think it's necessary, go ahead.
